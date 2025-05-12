@@ -1,0 +1,96 @@
+Metadata-Version: 2.4
+Name: ome-zarr
+Version: 0.11.1
+Summary: Implementation of images in Zarr files.
+Author: The Open Microscopy Team
+Project-URL: Documentation, https://ome-zarr.readthedocs.io
+Project-URL: Repository, https://github.com/ome/ome-zarr-py
+Project-URL: Changelog, https://github.com/ome/ome-zarr-py/blob/master/CHANGELOG.md
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Science/Research
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Operating System :: OS Independent
+Classifier: License :: OSI Approved :: BSD License
+Requires-Python: >3.10
+Description-Content-Type: text/x-rst
+License-File: LICENSE
+Requires-Dist: numpy
+Requires-Dist: dask
+Requires-Dist: zarr<3,>=2.8.1
+Requires-Dist: fsspec[s3]!=2021.07.0,!=2023.9.0,>=0.8
+Requires-Dist: aiohttp<4
+Requires-Dist: requests
+Requires-Dist: scikit-image
+Requires-Dist: toolz
+Provides-Extra: tests
+Requires-Dist: pytest; extra == "tests"
+Dynamic: license-file
+
+|pypi| |docs| |coverage|
+
+===========
+ome-zarr-py
+===========
+
+Tools for multi-resolution images stored in Zarr filesets, according to the `OME NGFF spec`_.
+
+See `Readthedocs <https://ome-zarr.readthedocs.io/>`_ for usage information.
+
+Documentation
+-------------
+
+Documentation will be automatically built with `readthedocs`.
+
+It can be built locally with::
+
+    $ pip install -r docs/requirements.txt
+    $ sphinx-build -b html docs/source/ docs/build/html
+
+Tests
+-----
+
+Tests can be run locally via `tox` with::
+
+    $ pip install tox
+    $ tox
+
+To enable pre-commit code validation::
+
+    $ pip install pre-commit
+    $ pre-commit install
+
+Release process
+---------------
+
+This repository uses `setuptools_scm` to manage version numbers.
+
+Go to https://github.com/ome/ome-zarr-py/releases and click on `Draft a new release`.
+
+Under `Choose a tag`, type the new version number (e.g. `0.1.0`) and choose
+`Create a new tag on publish` from the dropdown.
+
+Click on `Generate release notes` to create a changelog and `Publish release` to publish the release.
+
+License
+-------
+
+Distributed under the terms of the `BSD`_ license,
+"ome-zarr-py" is free and open source software
+
+.. _`OME NGFF spec`: https://github.com/ome/ngff
+.. _`BSD`: https://opensource.org/licenses/BSD-2-Clause
+
+.. |pypi| image:: https://badge.fury.io/py/ome-zarr.svg
+    :alt: PyPI project
+    :target: https://badge.fury.io/py/ome-zarr
+
+.. |docs| image:: https://readthedocs.org/projects/ome-zarr/badge/?version=stable
+    :alt: Documentation Status
+    :target: https://ome-zarr.readthedocs.io/en/stable/?badge=stable
+
+.. |coverage| image:: https://codecov.io/gh/ome/ome-zarr-py/branch/master/graph/badge.svg
+    :alt: Test coverage
+    :target: https://codecov.io/gh/ome/ome-zarr-py
