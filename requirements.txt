@@ -1,0 +1,7 @@
+dask
+imageio
+matplotlib
+napari
+numpy
+pandas
+aicsimageio

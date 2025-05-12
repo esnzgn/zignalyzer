@@ -1,50 +1,48 @@
-# zignalyzer
-import pandas as pd
-import seaborn as sns
+import dask.array as da
+import imageio.v3 as iio
 import matplotlib.pyplot as plt
-from scipy.stats import ttest_ind
+import napari
+import numpy as np
+import os
 
-# Load the data (replace with your actual path or DataFrame if already loaded)
-df = pd.read_html("fishes.html")[0]
+import pandas as pd
+import re
+from aicsimageio import AICSImage
+from pathlib import Path
+from skimage import io, measure, morphology
+from skimage.filters import threshold_otsu, threshold_li, threshold_local
+from skimage.morphology import white_tophat, disk, square
+from skimage import io, img_as_ubyte
+print("#########################>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 1")
 
-# Step 1: Normalize area by fish size
-df["normalized_signal"] = df["area_max"] / df["li"]
+# Input and output directories
+fl_dir = Path("fl")
+labels_dir = Path("largest_label")
+output_dir = Path("measurement_output")
 
-# Step 2: Identify control and treatment groups
-control_group = df[df["sample"] == "VC"]
-treatment_groups = df[df["sample"] != "VC"]
+if not os.path.exists(output_dir):
+    output_dir.mkdir(parents=True, exist_ok=True)
+    
+mask_fish = None
+image_fl = None
+mask_sack_li = None
+mask_sack_otsu = None
+mask_measure_li = None
+mask_measure_otsu = None
+print("#########################>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 2")
+rows = []
+thrs = []
+fracs = []
+reg = r'fl.([A-Z,a-z]*)-'
+# Process each label image
+max_h = 0
+max_w = 0
+for file_fl in fl_dir.glob("*.tif"):
+    image_fl = io.imread(file_fl)
+    max_h = max(max_h, image_fl.shape[0])
+    max_w = max(max_w, image_fl.shape[1])
+print((max_h, max_w))
+    
+print("#########################>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> 3")
 
-# Step 3: Perform t-tests comparing each treatment to control
-results = []
-for treatment in treatment_groups["sample"].unique():
-    treat_data = df[df["sample"] == treatment]["normalized_signal"]
-    control_data = control_group["normalized_signal"]
-
-    if len(treat_data) > 1 and len(control_data) > 1:
-        t_stat, p_val = ttest_ind(control_data, treat_data, equal_var=False)
-    else:
-        t_stat, p_val = float('nan'), float('nan')
-
-    results.append({
-        "Treatment": treatment,
-        "T-Statistic": t_stat,
-        "P-Value": p_val
-    })
-
-t_test_df = pd.DataFrame(results)
-
-# Step 4: Plotting
-plt.figure(figsize=(10, 6))
-sns.boxplot(data=df, x="sample", y="normalized_signal", palette="Set2")
-sns.stripplot(data=df, x="sample", y="normalized_signal", color="black", size=6, jitter=True, alpha=0.7)
-plt.title("Normalized Fluorescence Signal by Treatment")
-plt.xlabel("Treatment Group")
-plt.ylabel("Normalized Signal (area_max / fish length)")
-plt.grid(True)
-plt.tight_layout()
-plt.show()
-
-# Step 5: Show t-test results
-print("T-Test Results:")
-print(t_test_df)
 
